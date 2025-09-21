@@ -1,0 +1,19 @@
+/* theming variables */
+:root {
+    --background-color: #323437;
+    --main-color: #d1d0c5;
+}
+
+/* remove padding and margin */
+html, body {
+    padding: 0;
+    margin: 0;
+}
+
+/* add default font config */
+* {
+    color: var(--main-color);
+    font-family: "Cascadia Mono", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+}

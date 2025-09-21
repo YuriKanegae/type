@@ -1,0 +1,13 @@
+.layout-container {
+    background-color: var(--background-color);
+
+    height: 100svh;
+    padding: 16px 10svw;
+}
+
+.layout-nav-container {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
