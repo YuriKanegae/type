@@ -17,3 +17,11 @@ html, body {
     font-optical-sizing: auto;
     font-style: normal;
 }
+
+/* some common classes */
+.page-header {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+}

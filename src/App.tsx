@@ -1,10 +1,10 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import Home                             from "./pages/home"
-import Info                             from "./pages/info";
+import InfoPage                         from "./pages/info";
+import Files                            from "./pages/files";
 import Layout                           from "./components/layout";
 import NoMatch                          from "./pages/404";
-import Settings                         from "./pages/settings";
 import { DBProvider }                   from "./context/dbContext";
 
 function App() {
@@ -14,8 +14,8 @@ function App() {
         <Layout>
           <Routes>
             <Route path="/"         element={<Home />} />
-            <Route path="/info"     element={<Info />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/info"     element={<InfoPage />} />
+            <Route path="/files"    element={<Files />} />
 
             <Route path="*"         element={<NoMatch />} />
           </Routes>
