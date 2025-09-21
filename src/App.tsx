@@ -5,19 +5,22 @@ import Info                             from "./pages/info";
 import Layout                           from "./components/layout";
 import NoMatch                          from "./pages/404";
 import Settings                         from "./pages/settings";
+import { DBProvider }                   from "./context/dbContext";
 
 function App() {
   return (
     <BrowserRouter>
-      <Layout>
-        <Routes>
-          <Route path="/"         element={<Home />} />
-          <Route path="/info"     element={<Info />} />
-          <Route path="/settings" element={<Settings />} />
+      <DBProvider>
+        <Layout>
+          <Routes>
+            <Route path="/"         element={<Home />} />
+            <Route path="/info"     element={<Info />} />
+            <Route path="/settings" element={<Settings />} />
 
-          <Route path="*"         element={<NoMatch />} />
-        </Routes>
-      </Layout>
+            <Route path="*"         element={<NoMatch />} />
+          </Routes>
+        </Layout>
+      </DBProvider>
     </BrowserRouter>
   );
 }
