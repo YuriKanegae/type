@@ -6,6 +6,8 @@ type DBValuesType = {
     database:       IDBDatabase | null;
     isConnecting:   boolean;
 
+    get:            <T>(store: string, id: number) => Promise<T | null>;
+    count:          (store: string) => Promise<number>;
     listAll:        <T>(store: string) => Promise<T[]>;
 };
 
@@ -19,6 +21,8 @@ const defaultValues: DBValuesType = {
     database:       null,
     isConnecting:   true,
 
+    count:          () => Promise.resolve(0),
+    get:            () => Promise.resolve(null),
     listAll:        () => Promise.resolve([]),
 };
 export const dbContext = createContext(defaultValues);
@@ -28,6 +32,32 @@ export const dbContext = createContext(defaultValues);
 export function DBProvider( props: PropsWithChildren ) {
     const [ database, setDatabase ]         = useState<IDBDatabase | null>(null);
     const [ isConnecting, setIsConnecting ] = useState(true);
+
+    function handleGet<T>( store: string, id: number ): Promise<T | null> {
+        if(!database) throw new Error("cannot query database");
+
+        const transaction = database.transaction([store]);
+        const objectStore = transaction.objectStore(store);
+        const request     = objectStore.get(id);
+
+        return new Promise<T | null>( ( resolve, reject ) => {
+            request.onsuccess = () => resolve(request.result);
+            request.onerror   = () => reject(request.error);
+        });
+    }
+    
+    function handleCount( store: string ): Promise<number> {
+        if(!database) throw new Error("cannot query database");
+
+        const transaction = database.transaction([store]);
+        const objectStore = transaction.objectStore(store);
+        const request     = objectStore.count();
+
+        return new Promise<number>( ( resolve, reject ) => {
+            request.onsuccess = () => resolve(request.result);
+            request.onerror   = () => reject(request.error);
+        });
+    }
 
     function handleListAll<T>( store: string ): Promise<T[]> {
         if(!database) throw new Error("cannot query database");
@@ -48,8 +78,6 @@ export function DBProvider( props: PropsWithChildren ) {
 
             request.onupgradeneeded = () => {
                 const result = request.result;
-
-                debugger;
                 
                 if(!result.objectStoreNames.contains("sample")) {
                     const sampleStore = result.createObjectStore("sample", { autoIncrement: true });
@@ -76,7 +104,14 @@ export function DBProvider( props: PropsWithChildren ) {
         if(!database) initDb();
     }, []);
 
-    const values = { database, isConnecting, listAll: handleListAll};
+    const values = {
+        database:       database,
+        isConnecting:   isConnecting,
+
+        get:            handleGet,
+        count:          handleCount,
+        listAll:        handleListAll,
+    };
 
     return <dbContext.Provider value={values}>{ props.children }</dbContext.Provider>;
 }
